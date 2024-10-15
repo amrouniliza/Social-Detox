@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ChatService } from '../services/chat.service';
 
-import { CommonModule } from '@angular/common';  // Import nécessaire pour ngClass
-import { FormsModule } from '@angular/forms';    // Import nécessaire pour ngModel
+import { CommonModule } from '@angular/common';  
+import { FormsModule } from '@angular/forms';   
 
 @Component({
   selector: 'app-chat',
@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';    // Import nécessaire pour ngMo
 })
 
 export class ChatComponent implements OnInit {
-  messages: { text: string; sender: string }[] = [];
+  messages: { text: string; sender: string; timestamp: Date }[] = [];
   newMessage = '';
 
   constructor(private chatService: ChatService) {}

@@ -1,50 +1,46 @@
-<p>hello</p>
-<!-- feed.component.html -->
-<div class="max-w-2xl mx-auto p-4 space-y-6">
-    <div *ngFor="let post of posts" class="bg-white shadow-lg rounded-lg p-6">
-      <!-- Titre du post -->
-      <div class="mb-4">
-        <h3 class="text-xl font-semibold text-gray-800">{{ post.title }}</h3>
-        <p class="text-gray-600 mt-2">{{ post.content }}</p>
-      </div>
-  
-      <!-- Boutons like et commentaires -->
-      <div class="flex items-center space-x-4">
-        <!-- Like button -->
-        <button (click)="likePost(post)" class="flex items-center space-x-2 text-gray-600 hover:text-blue-500">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 9l-2 2m0 0l-2-2m2 2V3m5 7h2a2 2 0 01-2 2h-5v9h5a2 2 0 002-2v-6a2 2 0 00-2-2h-2z" />
-          </svg>
-          <span>{{ post.likes }} Like(s)</span>
-        </button>
-  
-        <!-- Commentaire -->
-        <button class="text-gray-600 hover:text-blue-500">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7-3v13l-7-3V8z" />
-          </svg>
-          <span>{{ post.comments.length }} Comment(s)</span>
-        </button>
-      </div>
-  
-      <!-- Affichage des commentaires -->
-      <div class="mt-4 space-y-2">
-        <h4 class="font-medium text-gray-800">Commentaires :</h4>
-        <ul>
-          <li *ngFor="let comment of post.comments" class="text-gray-600 bg-gray-100 p-2 rounded-lg">
-            {{ comment }}
-          </li>
-        </ul>
-      </div>
-  
-      <!-- Formulaire de nouveau commentaire -->
-      <div class="mt-4">
-        <input type="text" placeholder="Ajouter un commentaire..."
-               class="w-full p-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300" />
-        <button (click)="addComment(post)" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-          Ajouter un commentaire
-        </button>
+<div class="min-h-screen bg-gray-100 py-10">
+  <div class="max-w-2xl mx-auto">
+    <!-- Publication Card -->
+    <div class="bg-white shadow-lg rounded-lg mb-6">
+      <div class="p-4">
+        <!-- Nom de l'utilisateur et date de la publication -->
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-bold">Nom de l'utilisateur</h2>
+          <span class="text-sm text-gray-500">Posté le 12 Octobre 2024</span>
+        </div>
+
+        <!-- Contenu de la publication -->
+        <p class="text-gray-700 mb-4">
+          Ceci est un exemple de contenu de publication. Vous pouvez personnaliser ce texte selon vos besoins.
+        </p>
+
+        <!-- Boutons J'aime et Commentaire -->
+        <div class="flex items-center justify-between">
+          <button (click)="likePost()" class="flex items-center text-blue-500 hover:text-blue-700">
+            <span class="mr-2">👍</span> J'aime
+          </button>
+
+          <button (click)="toggleComments()" class="text-gray-500 hover:text-gray-700">
+            Commentaires ({{ comments.length }})
+          </button>
+        </div>
+
+        <!-- Zone de commentaires -->
+        <div *ngIf="showComments" class="mt-4">
+          <div *ngFor="let comment of comments" class="border-t border-gray-200 pt-4">
+            <p class="text-sm text-gray-600"><strong>{{ comment.user }}</strong> : {{ comment.text }}</p>
+          </div>
+
+          <!-- Ajouter un commentaire -->
+          <div class="mt-4">
+            <input [(ngModel)]="newComment" placeholder="Ajouter un commentaire..."
+              class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300">
+            <button (click)="addComment()" class="mt-2 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
+              Publier
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  
+</div>

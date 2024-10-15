@@ -1,37 +1,37 @@
-// feed.component.ts
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; 
+import { CommonModule } from '@angular/common';  
+
+
 @Component({
   selector: 'app-feed',
+  standalone: true,  // Si vous utilisez des composants standalone
+  imports: [CommonModule, FormsModule],
   templateUrl: './feed.component.html',
+  styleUrls: ['./feed.component.css']
 })
-export class FeedComponent implements OnInit {
-  posts = [
-    {
-      title: 'Publication 1',
-      content: 'Ceci est le contenu de la publication 1',
-      likes: 0,
-      comments: []
-    },
-    {
-      title: 'Publication 2',
-      content: 'Ceci est le contenu de la publication 2',
-      likes: 0,
-      comments: []
-    }
-  ];
+export class FeedComponent {
+  showComments: boolean = false;
+  comments: { user: string, text: string }[] = [];
   newComment: string = '';
 
-  ngOnInit(): void {}
-
-  likePost(post: any) {
-    post.likes += 1;
+  likePost() {
+    alert('Vous avez aimé cette publication !');
   }
 
-  addComment(post: any) {
+  toggleComments() {
+    this.showComments = !this.showComments;
+  }
+
+  addComment() {
     if (this.newComment.trim()) {
-      post.comments.push(this.newComment);
-      this.newComment = '';
+      this.comments.push({ user: 'Utilisateur courant', text: this.newComment });
+      this.newComment = ''; // Vider le champ de saisie
     }
+  }
+
+  onInput(event: Event) {
+    const input = event.target as HTMLInputElement; // Caste l'event pour obtenir la valeur
+    this.newComment = input.value; // Met à jour la nouvelle valeur du commentaire
   }
 }
