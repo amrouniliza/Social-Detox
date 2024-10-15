@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 import { AppComponent } from './app.component';
 import { FeedComponent } from './feed/feed.component';
@@ -9,6 +10,7 @@ import { FeedComponent } from './feed/feed.component';
 
 @NgModule({
   declarations: [
+    
     FeedComponent,
     
   ],
@@ -16,7 +18,8 @@ import { FeedComponent } from './feed/feed.component';
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    AppComponent
+    AppComponent,
+    CommonModule
   ],
   providers: [],
   // bootstrap: [AppComponent]
