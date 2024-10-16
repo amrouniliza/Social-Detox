@@ -14,13 +14,36 @@ import { FeedService } from '../services/feed.service';
   providers: [FeedService]
 })
 export class FeedComponent {
+  currentDate: Date = new Date();
   showComments: boolean = false;
   comments: { user: string, text: string }[] = [];
   newComment: string = '';
   constructor(private feedService: FeedService) {}
   ngOnInit() {
-    this.comments = this.feedService.getComments();
+      this.comments = this.feedService.getComments();
+    }
+
+    
+  newPostText: string = '';
+  newPostImage: string = ''; 
+  posts: { user: string, text: string, image: string }[] = [
+    { user: 'Utilisateur courant', text: 'Ceci est un exemple de contenu de publication.', image: 'assets/images/chiot.png' } // Remplace par l'URL de l'image de chiot
+  ]; // Liste des pub
+
+  // Méthode pour gérer la sélection d'une image
+  onImageSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.newPostImage = e.target.result; // Mettre à jour le chemin de l'image avec le résultat
+      };
+      reader.readAsDataURL(file); // Lire le fichier comme une URL de données
+    }
   }
+
+
+
   likePost() {
     alert('Vous avez aimé cette publication !');
   }
@@ -39,5 +62,14 @@ export class FeedComponent {
   onInput(event: Event) {
     const input = event.target as HTMLInputElement; // Caste l'event pour obtenir la valeur
     this.newComment = input.value; // Met à jour la nouvelle valeur du commentaire
+  }
+
+
+  addPost() {
+    if (this.newPostText.trim() && this.newPostImage.trim()) {
+      this.posts.push({ user: 'Utilisateur courant', text: this.newPostText, image: this.newPostImage });
+      this.newPostText = ''; // Réinitialiser le champ texte
+      this.newPostImage = ''; // Réinitialiser le champ image
+    }
   }
 }

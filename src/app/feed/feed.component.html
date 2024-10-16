@@ -1,20 +1,28 @@
 <div class="min-h-screen bg-gray-100 py-10">
   <div class="max-w-2xl mx-auto">
-    <!-- Publication Card -->
-    <div class="bg-white shadow-lg rounded-lg mb-6">
+    <!-- Formulaire pour ajouter une nouvelle publication -->
+    <div class="bg-white shadow-lg rounded-lg mb-6 p-4">
+      <input [(ngModel)]="newPostText" placeholder="Écrivez votre publication..."
+        class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300">
+      
+      <input type="file" (change)="onImageSelected($event)" accept="image/*" class="mt-2">
+      
+      <button (click)="addPost()" class="mt-2 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
+        Ajouter une publication
+      </button>
+    </div>
+
+    <!-- Afficher les publications -->
+    <div *ngFor="let post of posts" class="bg-white shadow-lg rounded-lg mb-6">
       <div class="p-4">
-        <!-- Nom de l'utilisateur et date de la publication -->
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-xl font-bold">Nom de l'utilisateur</h2>
-          <span class="text-sm text-gray-500">Posté le 12 Octobre 2024</span>
+          <h2 class="text-xl font-bold">{{ post.user }}</h2>
+          <span class="text-sm text-gray-500">Posté le {{ currentDate | date: 'short' }}</span>
         </div>
 
-        <!-- Contenu de la publication -->
-        <p class="text-gray-700 mb-4">
-          Ceci est un exemple de contenu de publication. Vous pouvez personnaliser ce texte selon vos besoins.
-        </p>
+        <p class="text-gray-700 mb-4">{{ post.text }}</p>
+        <img [src]="post.image" alt="Image de publication" class="w-full h-auto mb-4 rounded-lg">
 
-        <!-- Boutons J'aime et Commentaire -->
         <div class="flex items-center justify-between">
           <button (click)="likePost()" class="flex items-center text-blue-500 hover:text-blue-700">
             <span class="mr-2">👍</span> J'aime
@@ -25,13 +33,11 @@
           </button>
         </div>
 
-        <!-- Zone de commentaires -->
         <div *ngIf="showComments" class="mt-4">
           <div *ngFor="let comment of comments" class="border-t border-gray-200 pt-4">
             <p class="text-sm text-gray-600"><strong>{{ comment.user }}</strong> : {{ comment.text }}</p>
           </div>
 
-          <!-- Ajouter un commentaire -->
           <div class="mt-4">
             <input [(ngModel)]="newComment" placeholder="Ajouter un commentaire..."
               class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300">
