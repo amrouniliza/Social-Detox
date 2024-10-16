@@ -5,18 +5,18 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ChatService {
+export class FeedService {
   constructor(private http: HttpClient) {}
 
   private apiUrl = 'http://127.0.0.1:5000/detect_insult';
-  private messages: { text: string; sender: string; timestamp: Date; isImage?: boolean }[] = [
-    { text: 'Hello!', sender: 'Elghani', timestamp: new Date() },
-    { text: 'Comment ça va ', sender: 'Elghani', timestamp: new Date() }
+  private comments: { user: string, text: string }[] = [
+    { user: 'Alice', text: 'Super post !' },
+    { user: 'Bob', text: 'Très intéressant, merci pour le partage !' }
   ];
+  getComments() {
+    return this.comments
+    }
 
-  getMessages() {
-    return this.messages;
-  }
 
   detectInsult(text: string): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
@@ -25,12 +25,11 @@ export class ChatService {
     return this.http.post<any>(this.apiUrl, body, { headers });
   }
 
-  addMessage(text: string, sender: string, isImage: boolean = false) {
-    if(isImage==false) {
+  addMessage(text: string, user: string, ) {
     this.detectInsult(text).subscribe(
       (response) => {
         if (response[0].score <= 0.7) {
-          this.messages.push({ text, sender, timestamp: new Date(), isImage });
+          this.comments.push({ text, user});
         } else {
           console.log('Le message est trop toxique pour être envoyé.');
           alert('Le message est trop toxique pour être envoyé.');
@@ -39,10 +38,6 @@ export class ChatService {
       (error) => {
         console.error('Erreur lors de la vérification du message:', error);
       }
-    ); }else{
-
-      this.messages.push({ text, sender, timestamp: new Date(), isImage });
-    }
+    ); }
   }
  
-}

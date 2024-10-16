@@ -1,20 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms'; 
-import { CommonModule } from '@angular/common';  
+import { CommonModule } from '@angular/common'; 
+import { HttpClientModule } from '@angular/common/http'; 
+import { FeedService } from '../services/feed.service';
 
 
 @Component({
   selector: 'app-feed',
   standalone: true,  // Si vous utilisez des composants standalone
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './feed.component.html',
-  styleUrls: ['./feed.component.css']
+  styleUrls: ['./feed.component.css'],
+  providers: [FeedService]
 })
 export class FeedComponent {
   showComments: boolean = false;
   comments: { user: string, text: string }[] = [];
   newComment: string = '';
-
+  constructor(private feedService: FeedService) {}
+  ngOnInit() {
+    this.comments = this.feedService.getComments();
+  }
   likePost() {
     alert('Vous avez aimé cette publication !');
   }
@@ -25,7 +31,7 @@ export class FeedComponent {
 
   addComment() {
     if (this.newComment.trim()) {
-      this.comments.push({ user: 'Utilisateur courant', text: this.newComment });
+      this.feedService.addMessage(  this.newComment ,'Liza');
       this.newComment = ''; // Vider le champ de saisie
     }
   }

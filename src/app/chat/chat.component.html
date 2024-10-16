@@ -1,39 +1,54 @@
-<div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-  <div class="flex flex-col h-screen bg-gray-100">
-    <div class="flex-1 overflow-y-auto p-4">
-      <div class="max-w-2xl mx-auto space-y-4">
+
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+  <div class="w-full max-w-lg bg-white rounded-lg shadow-lg dark:border dark:bg-gray-800 dark:border-gray-700">
+    <!-- Chat Header -->
+    <div id ="chat2"class="p-4 bg-gray-100 border-b flex justify-between items-center">
+      <span class="text-xl font-semibold">Liza</span>
+      <span class="text-black">Messages</span>
+    </div>
+    <!-- Chat Container: Full height within its parent -->
+    <div class="flex flex-col h-full max-h-screen" id="chat">
+      <!-- Scrollable Messages Area -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-4">
         <div *ngFor="let message of messages" 
              class="flex" 
-             [ngClass]="{'justify-end': message.sender === 'You'}">
+             [ngClass]="{'justify-end': message.sender === 'You', 'justify-start': message.sender !== 'You'}">
           <div class="max-w-xs lg:max-w-md" 
                [ngClass]="{
-                 'bg-blue-500 text-white': message.sender === 'You',
-                 'bg-white text-gray-800': message.sender !== 'You'
-               }">
-            <div class="rounded-lg px-4 py-2 shadow">
-              <p class="font-bold">{{ message.sender }}</p>
+                 'bg-stone-500 text-white': message.sender === 'You',
+                 'bg-gray-200 text-gray-800': message.sender !== 'You'
+               }"
+               class="rounded-lg px-4 py-2 shadow-lg">
+            <!-- Vérifie si c'est du texte ou une image -->
+            <ng-container *ngIf="!message.isImage; else imageTemplate">
               <p>{{ message.text }}</p>
-              <p class="text-xs mt-1 opacity-50">
-                {{ message.timestamp | date:'shortTime' }}
-              </p>
-            </div>
+            </ng-container>
+            <!-- Template d'image -->
+            <ng-template #imageTemplate>
+              <img [src]="message.text" alt="Uploaded Image" class="rounded-lg shadow-md" />
+            </ng-template>
+            <p class="text-xs mt-1 opacity-50">{{ message.timestamp | date:'shortTime' }}</p>
           </div>
         </div>
       </div>
-    </div>
-    <div class="p-4 bg-white border-t">
-      <div class="max-w-2xl mx-auto">
-        <form (ngSubmit)="sendMessage()" class="flex space-x-2">
+      <!-- Input Area: Fixed at the bottom -->
+      <div class="p-4 bg-gray-100 border-t flex items-center space-x-2">
+        <!-- Input File caché -->
+        <input type="file" #fileInput (change)="onImageSelected($event)" class="hidden" />
+        <button (click)="fileInput.click()" class="bg-stone-500 text-white px-3 py-2 rounded-lg focus:outline-none">
+          📷
+        </button>
+        <form (ngSubmit)="sendMessage()" class="flex flex-1 space-x-2">
           <input [(ngModel)]="newMessage" 
                  name="newMessage"
-                 class="flex-1 border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                 class="flex-1 border rounded-full px-4 py-2 focus:outline-none focus:ring-2" 
                  placeholder="Type a message..." />
           <button type="submit" 
-                  class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  class="bg-stone-500 text-white px-4 py-2 rounded-full hover:bg-stone-400 focus:outline-none focus:ring-2">
             Send
           </button>
         </form>
       </div>
     </div>
   </div>
-  </div>
+</div>

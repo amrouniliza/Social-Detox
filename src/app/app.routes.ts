@@ -3,10 +3,11 @@ import { FeedComponent } from './feed/feed.component';
 import { ChatComponent } from './chat/chat.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { JoinComponent } from './join/join.component';
 
 export const routes: Routes = [
 {
-    path: 'feed',
+    path: '',
     component: FeedComponent,
   },
   {
@@ -20,5 +21,9 @@ export const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent,
+  },
+  {
+    path: 'join',
+    component: JoinComponent,
   },
 ];
