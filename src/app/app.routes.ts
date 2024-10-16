@@ -1,9 +1,10 @@
-import { Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { FeedComponent } from './feed/feed.component';
 import { ChatComponent } from './chat/chat.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { JoinComponent } from './join/join.component';
+import { NgModule } from '@angular/core';
 
 export const routes: Routes = [
 {
@@ -27,3 +28,8 @@ export const routes: Routes = [
     component: JoinComponent,
   },
 ];
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }

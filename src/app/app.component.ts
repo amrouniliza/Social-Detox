@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { ChatComponent } from './chat/chat.component';
+
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,7 @@ import { ChatComponent } from './chat/chat.component';
 })
 export class AppComponent {
   title = 'social-detox';
-
+  constructor(private router : Router){}
   displayChat(){  
     const joinBtn = document.getElementById('joinBtn');
     const chat = document.getElementById('chat');
@@ -25,8 +26,17 @@ export class AppComponent {
     if (chat2) {
       chat2.style.display = 'block';
     }
+
   });
   
 
+  
+
+}
+goToChat(){
+  this.router.navigate(['/chat']);
+}
+goToLogin(){
+  this.router.navigate(['/login']);
 }
 }

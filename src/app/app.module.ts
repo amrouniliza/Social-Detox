@@ -6,14 +6,15 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { FeedComponent } from './feed/feed.component';
 import { ChatComponent } from './chat/chat.component'; 
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
-import { Router } from 'express';
+import { AppRoutingModule } from './app.routes';
 
 @NgModule({
   declarations: [
     
   ],
+  exports: [RouterModule],
   imports: [
     BrowserModule,
     FormsModule,
