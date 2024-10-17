@@ -1,0 +1,7 @@
+Flask
+psycopg2-binary
+requests
+gunicorn
+Werkzeug
+MarkupSafe
+flask-cors
