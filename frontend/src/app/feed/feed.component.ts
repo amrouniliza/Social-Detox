@@ -26,8 +26,8 @@ export class FeedComponent {
     
   newPostText: string = '';
   newPostImage: string = ''; 
-  posts: { user: string, text: string, image: string }[] = [
-    { user: 'Utilisateur courant', text: 'Ceci est un exemple de contenu de publication.', image: 'assets/images/chiot.png' } // Remplace par l'URL de l'image de chiot
+  posts: { user: string, text: string, image: string, likes: number }[] = [
+    { user: 'User', text: 'Ceci est un exemple de contenu de publication.', image: 'assets/images/chiot.png', likes: 0 } // Remplace par l'URL de l'image de chiot
   ]; // Liste des pub
 
   // Méthode pour gérer la sélection d'une image
@@ -44,8 +44,8 @@ export class FeedComponent {
 
 
 
-  likePost() {
-    alert('Vous avez aimé cette publication !');
+  likePost(index: number) {
+    this.posts[index].likes++; // Incrémente le nombre de "J'aime" pour la publication donnée
   }
 
   toggleComments() {
@@ -67,7 +67,7 @@ export class FeedComponent {
 
   addPost() {
     if (this.newPostText.trim() && this.newPostImage.trim()) {
-      this.posts.push({ user: 'Utilisateur courant', text: this.newPostText, image: this.newPostImage });
+      this.posts.unshift({ user: 'Vlad', text: this.newPostText, image: this.newPostImage , likes: 0});
       this.newPostText = ''; // Réinitialiser le champ texte
       this.newPostImage = ''; // Réinitialiser le champ image
     }
