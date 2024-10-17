@@ -6,7 +6,7 @@ from langage_sein import filter_and_reformulate_message, is_toxic
 import base64
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "https://my-express-app-1058119729143.us-central1.run.app"}}) 
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Connexion à la base de données PostgreSQL
 def get_db_connection():
@@ -59,24 +59,24 @@ def detect_toxicity():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# Endpoint pour détecter les images sensibles
 @app.route('/detect-image', methods=['POST'])
 def detect_image():
-    data = request.json
-    image_base64 = data.get("image_base64")
-    api_key = data.get("api_key")
+    if 'file' not in request.files or 'api_key' not in request.form:
+        return jsonify({"error": "File and API key are required"}), 400
 
-    # Vérification des entrées
-    if not image_base64 or not api_key:
-        return jsonify({"error": "Image and API key are required"}), 400
+    file = request.files['file']
+    api_key = request.form['api_key']
 
-    # Utilise la fonction depuis detect_image.py
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+
+    # Lire l'image
+    encoded_image = file.read()
+
     try:
-        is_sensitive = detect_violent_content(image_base64, api_key)
-        if is_sensitive:
-            return jsonify({"message": "L'image contient du contenu sensible."}), 200
-        else:
-            return jsonify({"message": "L'image ne contient pas de contenu sensible."}), 200
+        is_sensitive = detect_violent_content(encoded_image, api_key)
+
+        return jsonify({"sensible": is_sensitive}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

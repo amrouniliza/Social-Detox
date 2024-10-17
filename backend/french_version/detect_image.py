@@ -22,22 +22,24 @@ def get_db_connection():
         print(f"Erreur de connexion à la base de données : {e}")
         return None
 
-# Fonction pour détecter si une image contient du contenu sensible
 def detect_violent_content(encoded_image, api_key):
     """
     Utilise Google Cloud Vision API pour détecter si une image contient du contenu sensible.
-    :param encoded_image: Image encodée en base64.
+    :param encoded_image: Données binaires de l'image.
     :param api_key: Clé API Google Cloud Vision.
     :return: True si le contenu est sensible, sinon False.
     """
-    # Construire la requête
     url = f"https://vision.googleapis.com/v1/images:annotate?key={api_key}"
     headers = {"Content-Type": "application/json"}
+
+    # Encoder l'image en base64 et la décoder en UTF-8
+    encoded_image_str = base64.b64encode(encoded_image).decode('utf-8')
+
     body = {
         "requests": [
             {
                 "image": {
-                    "content": encoded_image
+                    "content": encoded_image_str
                 },
                 "features": [
                     {
@@ -48,26 +50,37 @@ def detect_violent_content(encoded_image, api_key):
         ]
     }
 
-    # Envoyer la requête à l'API Google Cloud Vision
-    response = requests.post(url, headers=headers, json=body)
+    print('Start: Call google cloud vision')
+    try:
+        # Envoyer la requête à l'API Google Cloud Vision
+        response = requests.post(url, headers=headers, json=body)
+        print(f'Finish: Call google cloud vision', response)
 
-    # Vérifier si la requête a réussi
-    if response.status_code != 200:
-        raise Exception(f"Error: {response.status_code}, {response.text}")
+        # Vérifier si la requête a réussi
+        if response.status_code != 200:
+            raise Exception(f"Error: {response.status_code}, {response.text}")
 
-    # Traiter la réponse JSON
-    result = response.json()
-    safe_search = result["responses"][0]["safeSearchAnnotation"]
+        # Traiter la réponse JSON
+        result = response.json()
+        print(f"Google Cloud Vision result: {result}")
+        safe_search = result["responses"][0]["safeSearchAnnotation"]
 
-    # Retourner True si le contenu est sensible
-    sensitive_likelihoods = ["LIKELY", "VERY_LIKELY"]
-    return (
-        safe_search["adult"] in sensitive_likelihoods or
-        safe_search["violence"] in sensitive_likelihoods or
-        safe_search["racy"] in sensitive_likelihoods or
-        safe_search["medical"] in sensitive_likelihoods or
-        safe_search["spoof"] in sensitive_likelihoods
-    )
+        # Définir les niveaux considérés comme sensibles
+        sensitive_likelihoods = ["LIKELY", "VERY_LIKELY"]
+
+        # Déterminer si l'image est sensible
+        is_sensitive = (
+            safe_search["adult"] in sensitive_likelihoods or
+            safe_search["violence"] in sensitive_likelihoods or
+            safe_search["racy"] in sensitive_likelihoods or
+            safe_search["medical"] in sensitive_likelihoods or
+            safe_search["spoof"] in sensitive_likelihoods
+        )
+        print(f'is_sensitive {is_sensitive} ...')
+        return is_sensitive
+    except Exception as e:
+        print(f"Error during Google Vision API call: {e}")
+        raise
 
 # Endpoint pour vérifier si une image contient du contenu sensible
 @app.route('/detect-image', methods=['POST'])
