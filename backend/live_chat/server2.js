@@ -72,6 +72,13 @@ app.get('/chat', (req, res) => {
   res.sendFile(__dirname + '/templates/chat.html');
 });
 
+
+app.get('/chat1', (req, res) => {
+  res.sendFile(__dirname + '/templates/chat1.html');
+});
+
+
+
 // Gérer les connexions Socket.io
 io.on('connection', (socket) => {
   ioController.registerSocket(socket); // Enregistre chaque socket nouvellement connecté
@@ -79,5 +86,5 @@ io.on('connection', (socket) => {
 
 // Démarrer le serveur
 server.listen(8080, () => {
-  console.log('Serveur en cours d\'exécution sur http://localhost:3000');
+  console.log('Serveur en cours d\'exécution sur http://localhost:8000');
 });

@@ -111,7 +111,7 @@ def filter_and_reformulate_message(text_content, api_key):
     # Vérifier si un mot vulgaire est toujours présent après reformulation
     if reformulated_text != text_content:
         # Le texte a été modifié par le remplacement, donc il est potentiellement toxique
-        return reformulated_text, True  # True indique que le texte était toxique
+        return f"Je vous propose la reformulation suivante : {reformulated_text}", True
     else:
         # Étape 2: Si aucun mot vulgaire n'est reformulé, analyser la violence du texte via Google API
         is_violent = analyze_text_sensitivity(reformulated_text, api_key)
