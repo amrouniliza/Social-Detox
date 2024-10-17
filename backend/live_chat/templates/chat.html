@@ -44,6 +44,18 @@
                 <div id="chatSection" class="card mt-3">
                     <div class="card-body">
                         <h4 class="card-title">Zone de Chat</h4>
+                        <div class="d-flex justify-content-end mb-3">
+                            <div class="mb-3">
+                                <label class="form-label">Choisissez la langue :</label>
+                                <div>
+                                    <input type="radio" name="language" id="engRadio" onclick="enable_eng_versio_api()" class="form-check-input">
+                                    <label for="engRadio" class="form-check-label me-3">English</label>
+                                    
+                                    <input type="radio" name="language" id="frRadio" onclick="enable_fr_versio_api()" class="form-check-input">
+                                    <label for="frRadio" class="form-check-label">Français</label>
+                                </div>
+                            </div>
+                        </div>
                         <div id="chatMessages"></div>
                         <div class="input-group">
                             <input type="text" id="messageInput" class="form-control" placeholder="Tapez votre message...">
@@ -59,11 +71,15 @@
     </div>
     <script src="/socket.io/socket.io.js"> </script>
     <script>
-        const socket = io();
+        const socket = io('https://my-express-app-1058119729143.us-central1.run.app');
 
         document.addEventListener('DOMContentLoaded', function () {
-    var username = 'https://my-express-app-1058119729143.us-central1.run.app';
-   // const socket = io('https://my-express-app-1058119729143.us-central1.run.app'); 
+        var username = '';
+        var eng_version=true;
+        var fr_version=false;
+        
+  
+
 
    
     document.getElementById('joinButton').addEventListener('click', function () {
@@ -95,33 +111,23 @@
     async function sendMessage() {
     const message = document.getElementById('messageInput').value.trim();
 
-    if (message) {
-        try {
-            
-//onst response = await fetch('http://127.0.0.1:5000/detect_insult'
-            console.log('Hello i ')
-            
-            const response = await fetch('https://social-detox-cr-1058119729143.us-central1.run.app/is-toxic', {
+    if (message  && eng_version) {
+        try {            
+            const response = await fetch('https://social-detox-eng-1058119729143.us-central1.run.app/detect_insult', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ text: message ,  api_key:"AIzaSyA6fXrzT-8uyYjpETkvYd-zZUHZqDgdcgU"}) 
+             
+                body: JSON.stringify({ text: message }) 
             });
-            console.log('Hello éé',response)
-
-            
             const data = await response.json(); 
+            const score = data[0].score;
 
-            console.log('DATA',data)
-           
-            // const label = data[0].label;
-            // const score = data[0].score;
-            // console.log(score);
-            const score = data.isTocic;
+          
 
      
-            if (!score) {
+            if (score<0.7) {
                
                 document.getElementById('messageInput').value = ''; 
                 socket.emit('sendMsg', message, username); 
@@ -131,16 +137,48 @@
                 newMessage.textContent = `${username}: ${message}`;
                 document.getElementById('chatMessages').appendChild(newMessage);
             } else {
-                alert("Message bloqué : Contenu toxique détecté."); 
+                alert("Message bloqué : Contenu inapproprié détecté."); 
+            }
+        } catch (error) {
+            console.error('Erreur lors de la vérification du message :', error);
+        }
+    }
+
+    if (message  && fr_version) {
+        try {            
+            const response = await fetch('https://social-detox-cr-1058119729143.us-central1.run.app/detect-text', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                   
+                },
+                
+                body: JSON.stringify({ text: message, api_key:"AIzaSyA6fXrzT-8uyYjpETkvYd-zZUHZqDgdcgU" }) 
+            });
+            const data = await response.json(); 
+            const istoxic = data.is_toxic;
+            const filteredMessage=data.filtered_message;
+
+          
+
+     
+            if (istoxic===false) {
+               
+                document.getElementById('messageInput').value = ''; 
+                socket.emit('sendMsg', message, username); 
+
+                const newMessage = document.createElement('p');
+                newMessage.className = 'fw-light';
+                newMessage.textContent = `${username}: ${message}`;
+                document.getElementById('chatMessages').appendChild(newMessage);
+            } else  {
+                alert(`Message bloqué : ${filtered_message}`); 
             }
         } catch (error) {
             console.error('Erreur lors de la vérification du message :', error);
         }
     }
 }
-
-
-
 
 
 
@@ -175,6 +213,19 @@
 
     
 });
+
+function enable_eng_versio_api(){
+            fr_version=false;
+            eng_version=true
+            
+        }
+
+        function enable_fr_versio_api(){
+            eng_version=false;
+            fr_version=true;
+        
+
+        }
 
 
       </script>
