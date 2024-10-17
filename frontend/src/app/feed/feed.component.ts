@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common'; 
 import { HttpClientModule } from '@angular/common/http'; 
 import { FeedService } from '../services/feed.service';
+import { HttpClient } from '@angular/common/http';
 
 
 @Component({
@@ -18,7 +19,13 @@ export class FeedComponent {
   showComments: boolean = false;
   comments: { user: string, text: string }[] = [];
   newComment: string = '';
-  constructor(private feedService: FeedService) {}
+  selectedFile: File | null = null;
+  imagePreview: string | ArrayBuffer | null = null;
+
+  constructor(
+    private feedService: FeedService,
+    private http: HttpClient
+  ) {}
   ngOnInit() {
       this.comments = this.feedService.getComments();
   }
@@ -35,11 +42,14 @@ export class FeedComponent {
   onImageSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
+      this.selectedFile = file;
+  
       const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.newPostImage = e.target.result; // Mettre à jour le chemin de l'image avec le résultat
+      reader.onload = () => {
+        this.imagePreview = reader.result; // Stocke la Data URL de l'image
+        this.newPostImage = reader.result as string;  // Utilisez reader.result ici
       };
-      reader.readAsDataURL(file); // Lire le fichier comme une URL de données
+      reader.readAsDataURL(file);
     }
   }
 
@@ -70,10 +80,38 @@ export class FeedComponent {
 
 
   addPost() {
-    if (this.newPostText.trim() && this.newPostImage.trim()) {
-      this.posts.unshift({ user: 'Vlad', text: this.newPostText, image: this.newPostImage , likes: 0});
-      this.newPostText = ''; // Réinitialiser le champ texte
-      this.newPostImage = ''; // Réinitialiser le champ image
+    if (this.newPostText.trim() && this.selectedFile) {
+      const formData = new FormData();
+      formData.append('file', this.selectedFile);  // Ajout du fichier image
+      formData.append('api_key', 'AIzaSyA6fXrzT-8uyYjpETkvYd-zZUHZqDgdcgU');  // Ajout de la clé API
+  
+      this.http.post<any>('https://social-detox-fr-1058119729143.us-central1.run.app/detect-image', formData).subscribe(
+        (response) => {
+          console.log('response', response)
+          if (!response.sensible && this.selectedFile) {
+            // L'image n'est pas sensible, vous pouvez la publier
+            this.posts.unshift({
+              user: 'Test',
+              text: this.newPostText,
+              image: this.newPostImage,  // Utilisation de la Data URL correcte
+              likes: 0
+            });
+  
+            // Réinitialiser les champs après la publication
+            this.newPostText = '';
+            this.selectedFile = null;
+            this.imagePreview = null;
+            this.newPostImage = '';
+          } else {
+            // L'image est sensible
+            alert('Votre image est sensible et ne peut pas être publiée.');
+          }
+        },
+        (error) => {
+          console.error('Erreur API :', error);
+          alert('Une erreur est survenue lors de la vérification de l\'image. Détails : ' + JSON.stringify(error));
+        }
+      );      
     }
   }
 }
