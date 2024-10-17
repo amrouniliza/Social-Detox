@@ -13,6 +13,8 @@ export class FeedService {
     { user: 'Alice', text: 'Super post !' },
     { user: 'Bob', text: 'Très intéressant, merci pour le partage !' }
   ];
+  showPopup: boolean = false;
+  popupFeed: string = '';
   getComments() {
     return this.comments
     }
@@ -25,19 +27,25 @@ export class FeedService {
     return this.http.post<any>(this.apiUrl, body, { headers });
   }
 
-  addMessage(text: string, user: string, ) {
-    this.detectInsult(text).subscribe(
-      (response) => {
-        if (response[0].score <= 0.7) {
-          this.comments.push({ text, user});
-        } else {
-          console.log('Le message est trop toxique pour être envoyé.');
-          alert('Le message est trop toxique pour être envoyé.');
+  addMessage(text: string, user: string): Observable<any> {
+    return new Observable((observer) => {
+      this.detectInsult(text).subscribe(
+        (response) => {
+          if (response[0].score <= 0.7) {
+            this.comments.push({ text, user });
+            observer.next({ success: true });
+          } else {
+            console.log('Le message est trop toxique pour être envoyé.');
+            observer.next({ success: false });
+          }
+          observer.complete();
+        },
+        (error) => {
+          console.error('Erreur lors de la vérification du message:', error);
+          observer.error(error);
         }
-      },
-      (error) => {
-        console.error('Erreur lors de la vérification du message:', error);
-      }
-    ); }
+      );
+    });
+  }
   }
  

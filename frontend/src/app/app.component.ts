@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { ChatComponent } from './chat/chat.component';
+import { LanguageService } from './services/app.service';
 
 
 @Component({
@@ -12,32 +13,18 @@ import { ChatComponent } from './chat/chat.component';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  isEnglish: boolean = false;
-
-  toggleLanguage() {
-    this.isEnglish = !this.isEnglish;
-  }
   title = 'social-detox';
-  constructor(private router : Router){}
-  displayChat(){  
-    const joinBtn = document.getElementById('joinBtn');
-    const chat = document.getElementById('chat');
-    const chat2 = document.getElementById('chat2');
+  isEnglish: boolean = false;
+  constructor(private router: Router, private languageService: LanguageService) {
+    this.languageService.isEnglish$.subscribe((isEnglish) => {
+      this.isEnglish = isEnglish;
+    });
+  }
 
-    joinBtn?.addEventListener('click', () => {
-    if (chat) {
-      chat.style.display = 'block';
-    }
-    if (chat2) {
-      chat2.style.display = 'block';
-    }
-
-  });
+toggleLanguage() {
+    this.languageService.toggleLanguage();  
+  }
   
-
-  
-
-}
 goToChat(){
   this.router.navigate(['/chat']);
 }

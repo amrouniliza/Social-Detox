@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common'; 
 import { HttpClientModule } from '@angular/common/http'; 
 import { FeedService } from '../services/feed.service';
+import { Observable, of } from 'rxjs';
 
 
 @Component({
@@ -23,7 +24,8 @@ export class FeedComponent {
       this.comments = this.feedService.getComments();
   }
 
-  showPopup: boolean = false;  // Ajout pour afficher la popup
+  showPopup: boolean = false; 
+  popupFeed = '' // Ajout pour afficher la popup
   newPostText: string = '';
   newPostImage: string = ''; 
   posts: { user: string, text: string, image: string, likes: number }[] = [
@@ -57,11 +59,22 @@ export class FeedComponent {
   }
 
   addComment() {
-    if (this.newComment.trim()) {
-      this.feedService.addMessage(  this.newComment ,'Liza');
-      this.newComment = ''; // Vider le champ de saisie
-    }
+  if (this.newComment.trim()) {
+    this.feedService.addMessage(this.newComment, 'Liza').subscribe(
+      (result) => {
+        if (result.success) {
+          this.newComment = ''; // Vider le champ de saisie
+        } else {
+          this.showPopup = true; // Afficher la popup si le commentaire est vide
+          this.popupFeed = result.message; // Mettre à jour le message de la popup
+        }
+      },
+      (error) => {
+        console.error("Erreur lors de l'ajout du commentaire:", error);
+      }
+    );
   }
+}
 
   onInput(event: Event) {
     const input = event.target as HTMLInputElement; // Caste l'event pour obtenir la valeur

@@ -52,3 +52,24 @@
     </div>
   </div>
 </div>
+<div *ngIf="showPopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="relative bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg max-w-lg mx-auto shadow-lg flex flex-col justify-between" style="min-height: 150px;" role="alert">
+    <div>
+      <strong class="font-bold">
+        <!-- Affichage du message basé sur la langue et la réponse de l'API -->
+        {{ currentApiUrl === chatService.apiFrenchUrl ? 
+          popupMessage : 
+          'This message contains inappropriate language that violates our community guidelines. Please reformulate.' }}
+      <!-- Affichage du message reformulé ou d'un message par défaut -->
+    </strong>
+    </div>
+    
+    <!-- Espace réservé pour le bouton -->
+    <div class="flex justify-start mt-4">
+      <!-- Le bouton en bas à gauche -->
+      <button (click)="closePopup()" class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700">
+        OK
+      </button>
+    </div>
+  </div>
+</div>
