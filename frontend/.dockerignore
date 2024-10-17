@@ -1,0 +1,20 @@
+# Node modules et fichiers de dépendances
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Fichiers de sortie de la construction Angular
+dist
+build
+
+# Répertoires de cache
+.cache
+.angular
+
+# Fichiers environnementaux locaux
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
