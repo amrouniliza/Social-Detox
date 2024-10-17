@@ -45,9 +45,25 @@
             <button (click)="addComment()" class="mt-2 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
               Publier
             </button>
-          </div>
+             <!-- Bouton pour tester la popup -->
+    <button (click)="showPopup = true" class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700">
+      Montrer Popup
+    </button>
+
+  </div>
         </div>
       </div>
     </div>
+  </div>
+</div>
+<!-- Popup -->
+<div *ngIf="showPopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg max-w-lg mx-auto shadow-lg" role="alert">
+    <strong class="font-bold">Attention !</strong>
+    <span class="block sm:inline">Ce message contient un langage inapproprié qui ne respecte pas les règles de notre communauté.</span>
+    <span class="block sm:inline">Merci de le modifier avant de l’envoyer.</span>
+    <button (click)="closePopup()" class="mt-4 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700">
+      Modifier
+    </button>
   </div>
 </div>

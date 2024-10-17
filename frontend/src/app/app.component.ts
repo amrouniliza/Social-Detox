@@ -12,6 +12,11 @@ import { ChatComponent } from './chat/chat.component';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
+  isEnglish: boolean = false;
+
+  toggleLanguage() {
+    this.isEnglish = !this.isEnglish;
+  }
   title = 'social-detox';
   constructor(private router : Router){}
   displayChat(){  

@@ -11,6 +11,17 @@
             <a (click)="goToLogin()"class="cursor-pointer text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800">Log in</a>
             <a (click)="goToChat()" class="cursor-pointer text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"> Join chat </a>
           </div>
+          <div class="flex items-center space-x-2">
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" class="sr-only peer" (change)="toggleLanguage()">
+              <div
+                class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-400 peer-checked:bg-blue-600">
+              </div>
+              <div
+                class="absolute left-1 top-1 w-5 h-5 bg-white border border-gray-300 rounded-full transition-all peer-checked:translate-x-full peer-checked:border-white"></div>
+            </label>
+            <span class="ml-3 text-lg font-medium text-white">{{ isEnglish ? 'English' : 'Français' }}</span>
+          </div>
         </div>
       </nav>
     </header>

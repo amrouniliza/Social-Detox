@@ -21,14 +21,15 @@ export class FeedComponent {
   constructor(private feedService: FeedService) {}
   ngOnInit() {
       this.comments = this.feedService.getComments();
-    }
+  }
 
-    
+  showPopup: boolean = false;  // Ajout pour afficher la popup
   newPostText: string = '';
   newPostImage: string = ''; 
   posts: { user: string, text: string, image: string, likes: number }[] = [
     { user: 'User', text: 'Ceci est un exemple de contenu de publication.', image: 'assets/images/chiot.png', likes: 0 } // Remplace par l'URL de l'image de chiot
   ]; // Liste des pub
+
 
   // Méthode pour gérer la sélection d'une image
   onImageSelected(event: any) {
@@ -42,7 +43,10 @@ export class FeedComponent {
     }
   }
 
-
+  // Fermer la popup
+  closePopup() {
+    this.showPopup = false;
+  }
 
   likePost(index: number) {
     this.posts[index].likes++; // Incrémente le nombre de "J'aime" pour la publication donnée
